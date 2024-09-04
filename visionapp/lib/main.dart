@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -9,13 +10,20 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'VisionApp',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
+        colorScheme: ColorScheme.fromSeed(
+          seedColor:
+              const Color.fromARGB(255, 255, 253, 253), // Cor base para o tema
+          primary: const Color.fromARGB(255, 0, 0, 0), // Cor da AppBar
+        ),
+        appBarTheme: const AppBarTheme(
+          backgroundColor: Colors.white,
+          foregroundColor: Colors.black,
+        ),
         useMaterial3: true,
       ),
       home: const MyHomePage(title: 'VisionApp'),
@@ -44,115 +52,277 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   final ImagePicker _picker = ImagePicker();
 
- void _openCamera() async {
-  var status = await Permission.camera.status;
-  if (!status.isGranted) {
-    await Permission.camera.request();
-  }
+  void _openCamera() async {
+    var status = await Permission.camera.status;
+    if (!status.isGranted) {
+      await Permission.camera.request();
+    }
 
-  if (await Permission.camera.isGranted) {
-    final XFile? photo = await _picker.pickImage(source: ImageSource.camera);
-    if (photo != null) {
+    if (await Permission.camera.isGranted) {
+      final XFile? photo = await _picker.pickImage(source: ImageSource.camera);
+      if (photo != null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Foto capturada: ${photo.name}')),
+        );
+      }
+    } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Foto capturada: ${photo.name}')),
+        const SnackBar(content: Text('Permissão de câmera negada')),
       );
     }
-  } else {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Permissão de câmera negada')),
-    );
   }
-}
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.primary,
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
         title: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(Icons.remove_red_eye),
+            const Icon(Icons.remove_red_eye, color: Colors.black),
             const SizedBox(width: 10),
-            Text(widget.title),
+            Text(widget.title, style: const TextStyle(color: Colors.black)),
           ],
         ),
       ),
-      body: Column(
-        children: [
-          const SizedBox(height: 20),
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  SizedBox(
-                    width: 150,
-                    height: 150,
-                    child: Card(
-                      color: Colors.blue[100],
-                      child: InkWell(
-                        onTap: _openCamera,
-                        child: const Center(
-                          child: Text(
-                            'Abrir Câmera',
-                            style: TextStyle(fontSize: 18),
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              Color.fromARGB(255, 1, 16, 28),
+              Color.fromARGB(255, 4, 4, 116),
+              Color.fromARGB(255, 28, 0, 103)
+            ],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+        ),
+        child: Column(
+          children: [
+            const SizedBox(height: 20),
+            const Padding(
+              padding: EdgeInsets.fromLTRB(26, 0, 0, 0),
+              child: Align(
+                alignment: Alignment.centerLeft, // Alinha o texto à esquerda
+                child: Text(
+                  'Imagens',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(5.0),
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(left: 16.0, right: 10.0),
+                      child: ElevatedButton.icon(
+                        onPressed: _openCamera,
+                        icon: const Icon(Icons.camera_alt),
+                        label: const Text('Analisar Imagem'),
+                        style: ElevatedButton.styleFrom(
+                          foregroundColor: Colors.white,
+                          backgroundColor: const Color.fromARGB(255, 3, 4, 4),
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 26.0, horizontal: 14.0),
+                          textStyle: const TextStyle(fontSize: 18),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(
+                                20), // Remove o arredondamento
                           ),
                         ),
                       ),
                     ),
-                  ),
-                  const SizedBox(width: 10), // Espaço entre os cards
-                  SizedBox(
-                    width: 150,
-                    height: 150,
-                    child: Card(
-                      color: Colors.green[100],
-                      child: const Center(
-                        child: Text(
-                          'Opção 2',
-                          style: TextStyle(fontSize: 18),
-                        ),
-                      ),
+                    CustomCard(
+                      color1: const Color.fromARGB(255, 3, 3, 3),
+                      color2: const Color.fromARGB(255, 35, 4, 173),
+                      title: 'Ver imagens',
+                      onTap: () {},
                     ),
-                  ),
-                  const SizedBox(width: 10), // Espaço entre os cards
-                  SizedBox(
-                    width: 150,
-                    height: 150,
-                    child: Card(
-                      color: Colors.purple[100],
-                      child: const Center(
-                        child: Text(
-                          'Opção 3',
-                          style: TextStyle(fontSize: 18),
-                        ),
-                      ),
+                    const SizedBox(width: 10),
+                    CustomCard(
+                      color1: const Color.fromARGB(255, 3, 3, 3),
+                      color2: const Color.fromARGB(255, 35, 4, 173),
+                      title: 'Opção 3',
+                      onTap: () {},
                     ),
-                  ),
-                  const SizedBox(width: 10), // Espaço entre os cards
-                  SizedBox(
-                    width: 150,
-                    height: 150,
-                    child: Card(
-                      color: Colors.orange[100],
-                      child: const Center(
-                        child: Text(
-                          'Opção 4',
-                          style: TextStyle(fontSize: 18),
-                        ),
-                      ),
+                    const SizedBox(width: 10),
+                    CustomCard(
+                      color1: const Color.fromARGB(255, 3, 3, 3),
+                      color2: const Color.fromARGB(255, 35, 4, 173),
+                      title: 'Opção 4',
+                      onTap: () {},
                     ),
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(height: 20),
+            const Padding(
+              padding: EdgeInsets.only(left: 26.0),
+              child: Align(
+                alignment: Alignment.centerLeft, // Alinha o texto à esquerda
+                child: Text(
+                  'Recursos disponíveis',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
                   ),
-                ],
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    CustomCard2(
+                      color1: const Color.fromARGB(255, 8, 2, 2),
+                      color2: const Color.fromARGB(255, 44, 18, 245),
+                      title: 'Opção 1',
+                      onTap: () {},
+                    ),
+                    const SizedBox(width: 10),
+                    CustomCard2(
+                      color1: const Color.fromARGB(255, 8, 2, 2),
+                      color2: const Color.fromARGB(255, 44, 18, 245),
+                      title: 'Opção 2',
+                      onTap: () {},
+                    ),
+                    const SizedBox(width: 10),
+                    CustomCard2(
+                      color1: const Color.fromARGB(255, 8, 2, 2),
+                      color2: const Color.fromARGB(255, 44, 18, 245),
+                      title: 'Opção 4',
+                      onTap: () {},
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(height: 20),
+            const Padding(
+              padding: EdgeInsets.fromLTRB(26, 0, 0, 0),
+              child: Align(
+                alignment: Alignment.centerLeft, // Alinha o texto à esquerda
+                child: Text(
+                  'Últimas capturas',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class CustomCard extends StatelessWidget {
+  final Color color1;
+  final Color color2;
+  final String title;
+  final VoidCallback onTap;
+
+  const CustomCard({
+    super.key,
+    required this.color1,
+    required this.color2,
+    required this.title,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: 160,
+      height: 80,
+      child: Card(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(15),
+        ),
+        child: InkWell(
+          onTap: onTap,
+          child: Container(
+            // padding: const EdgeInsets.all(28),
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [color1, color2],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+              borderRadius: BorderRadius.circular(15),
+            ),
+            child: Center(
+              child: Text(
+                title,
+                style: const TextStyle(fontSize: 15, color: Colors.white),
               ),
             ),
           ),
-        ],
+        ),
+      ),
+    );
+  }
+}
+
+class CustomCard2 extends StatelessWidget {
+  final Color color1;
+  final Color color2;
+  final String title;
+  final VoidCallback onTap;
+
+  const CustomCard2({
+    super.key,
+    required this.color1,
+    required this.color2,
+    required this.title,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: 160,
+      height: 180,
+      child: Card(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(5),
+        ),
+        child: InkWell(
+          onTap: onTap,
+          child: Container(
+            // padding: const EdgeInsets.all(28),
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [color1, color2],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+              borderRadius: BorderRadius.circular(5),
+            ),
+            child: Center(
+              child: Text(
+                title,
+                style: const TextStyle(fontSize: 15, color: Colors.white),
+              ),
+            ),
+          ),
+        ),
       ),
     );
   }
