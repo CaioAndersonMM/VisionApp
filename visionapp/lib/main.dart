@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:visionapp/HomeScreen.dart';
 import 'package:visionapp/PatientDetail.dart';
 import 'package:visionapp/PatientListPage.dart';
 
@@ -20,11 +21,16 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(
           seedColor: const Color.fromARGB(255, 0, 123, 255), // Azul
           primary: const Color.fromARGB(255, 0, 123, 255), // Azul
-          secondary: Color.fromARGB(255, 255, 255, 255), // Branco
+          secondary: const Color.fromARGB(255, 255, 255, 255), // Branco
         ),
         appBarTheme: const AppBarTheme(
-          backgroundColor: Color.fromARGB(255, 1, 29, 58), // Azul
+          backgroundColor: Color.fromARGB(255, 1, 9, 19), // Azul escuro
           foregroundColor: Colors.white,
+        ),
+        bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+          backgroundColor: Color.fromARGB(255, 0, 0, 0), // Preto
+          selectedItemColor: Color.fromARGB(255, 1, 119, 255), // Azul
+          unselectedItemColor: Color.fromARGB(255, 20, 1, 1), // Branco
         ),
         useMaterial3: true,
       ),
@@ -44,6 +50,21 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   final ImagePicker _picker = ImagePicker();
+  int _selectedIndex = 0; // Índice do item selecionado na barra de navegação
+
+  // Lista de widgets correspondentes às telas
+  final List<Widget> _pages = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _pages.addAll([
+      HomeScreen(), // Instanciação do HomeScreen
+      const PatientListPage(), // Lista de pacientes
+      const ChatScreen(), // Tela de chat
+      const SettingsScreen(), // Tela de configurações
+    ]);
+  }
 
   void _openCamera() async {
     var status = await Permission.camera.status;
@@ -65,6 +86,12 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -78,164 +105,59 @@ class _MyHomePageState extends State<MyHomePage> {
           ],
         ),
       ),
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              Color.fromARGB(255, 5, 39, 75), // Azul
-              Color.fromARGB(255, 96, 88, 180), // Branco
-            ],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
+      body: _pages[
+          _selectedIndex], // Exibe a tela correspondente ao índice selecionado
+      bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: const Color.fromARGB(255, 1, 9, 19),
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
           ),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(height: 20),
-              const Text(
-                'Imagens',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 10),
-              SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  children: [
-                    ElevatedButton.icon(
-                      onPressed: _openCamera,
-                      icon: const Icon(Icons.camera_alt),
-                      label: const Text('Analisar Imagem'),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color.fromARGB(255, 36, 3, 77), // Branco
-                        foregroundColor: Colors.white, // Cor do texto
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 25.0, horizontal: 20.0),
-                        textStyle: const TextStyle(fontSize: 18),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 10),
-                    CustomCard(
-                      color1: const Color.fromARGB(255, 0, 123, 255), // Azul
-                      color2: Color.fromARGB(255, 36, 3, 77), // Branco
-                      title: 'Ver imagens',
-                      onTap: () {},
-                    ),
-                    const SizedBox(width: 10),
-                    CustomCard(
-                      color1: const Color.fromARGB(255, 0, 123, 255), // Azul
-                      color2: Color.fromARGB(255, 36, 3, 77), // Branco
-                      title: 'Opção 3',
-                      onTap: () {},
-                    ),
-                    const SizedBox(width: 10),
-                    CustomCard(
-                      color1: const Color.fromARGB(255, 0, 123, 255), // Azul
-                      color2: Color.fromARGB(255, 36, 3, 77), // Branco
-                      title: 'Opção 4',
-                      onTap: () {},
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 20),
-              const Text(
-                'Recursos disponíveis',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 10),
-              SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  children: [
-                    CustomCard2(
-                      color1: const Color.fromARGB(255, 0, 123, 255), // Azul
-                      color2: Color.fromARGB(255, 36, 3, 77), // Branco
-                      title: 'Relatório de Pacientes',
-                      onTap: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                                    builder: (context) => const PatientListPage(), // Navega para a nova tela
-                          ),
-                        );
-                      },
-                    ),
-                    const SizedBox(width: 10),
-                    CustomCard2(
-                      color1: const Color.fromARGB(255, 0, 123, 255), // Azul
-                      color2: Color.fromARGB(255, 36, 3, 77), // Branco
-                      title: 'Opção 2',
-                      onTap: () {},
-                    ),
-                    const SizedBox(width: 10),
-                    CustomCard2(
-                      color1: const Color.fromARGB(255, 0, 123, 255), // Azul
-                      color2: Color.fromARGB(255, 36, 3, 77), // Branco
-                      title: 'Opção 4',
-                      onTap: () {},
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 20),
-              const Text(
-                'Últimas capturas',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 10.0),
-                  child: GridView.builder(
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 3,
-                      crossAxisSpacing: 8.0,
-                      mainAxisSpacing: 8.0,
-                    ),
-                    itemCount: 9,
-                    itemBuilder: (context, index) {
-                      return Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(8.0),
-                          image: DecorationImage(
-                            image: NetworkImage(
-                                'https://picsum.photos/200?random=$index'),
-                            fit: BoxFit.cover,
-                          ),
-                          border: Border.all(
-                              color: const Color.fromARGB(255, 173, 216, 230),
-                              width: 2),
-                        ),
-                      );
-                    },
-                  ),
-                ),
-              ),
-            ],
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'Pacientes',
           ),
-        ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.chat), // Ícone do chat
+            label: 'Chat',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.settings),
+            label: 'Configurações',
+          ),
+        ],
+        currentIndex: _selectedIndex,
+        onTap: _onItemTapped,
       ),
     );
   }
 }
 
+// Classe ChatScreen (a ser implementada)
+class ChatScreen extends StatelessWidget {
+  const ChatScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const Center(
+        child: Text('Tela de Chat', style: TextStyle(color: Colors.white)));
+  }
+}
+
+// Classe SettingsScreen (a ser implementada)
+class SettingsScreen extends StatelessWidget {
+  const SettingsScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const Center(
+        child: Text('Tela de Configurações',
+            style: TextStyle(color: Colors.white)));
+  }
+}
+
+// As classes CustomCard e CustomCard2 permanecem as mesmas
 class CustomCard extends StatelessWidget {
   final Color color1;
   final Color color2;
@@ -288,46 +210,47 @@ class CustomCard extends StatelessWidget {
 }
 
 class CustomCard2 extends StatelessWidget {
-  final Color color1;
-  final Color color2;
-  final String title;
-  final VoidCallback onTap;
+  final Color color1; // Cor do início do gradiente
+  final Color color2; // Cor do final do gradiente
+  final String title; // Título do card
+  final VoidCallback onTap; // Função a ser chamada ao tocar no card
 
   const CustomCard2({
-    super.key,
+    Key? key,
     required this.color1,
     required this.color2,
     required this.title,
     required this.onTap,
-  });
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: 160,
-      height: 180,
+      width: 120, // Largura do card
+      height: 150, // Altura do card
       child: Card(
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(15),
+          borderRadius: BorderRadius.circular(15), // Bordas arredondadas
         ),
         child: InkWell(
-          onTap: onTap,
+          onTap: onTap, // Ação ao tocar no card
           child: Container(
             decoration: BoxDecoration(
               gradient: LinearGradient(
-                colors: [color1, color2],
+                colors: [color1, color2], // Cores do gradiente
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
               ),
-              borderRadius: BorderRadius.circular(15),
+              borderRadius: BorderRadius.circular(15), // Bordas arredondadas
             ),
             child: Center(
               child: Padding(
-                padding: const EdgeInsets.all(16.0),
+                padding: const EdgeInsets.all(16.0), // Padding interno
                 child: Text(
-                  title,
-                  style: const TextStyle(fontSize: 15, color: Colors.white),
-                  textAlign: TextAlign.center,
+                  title, // Texto do título
+                  style: const TextStyle(
+                      fontSize: 15, color: Colors.white), // Estilo do texto
+                  textAlign: TextAlign.center, // Centraliza o texto
                 ),
               ),
             ),
