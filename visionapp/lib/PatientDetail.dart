@@ -24,7 +24,7 @@ class PatientDetailsPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Detalhes do Paciente'),
-        backgroundColor: const Color.fromARGB(255, 1, 29, 58), // Azul
+        backgroundColor: const Color.fromARGB(255, 1, 9, 19), // Azul escuro
         elevation: 10, // Sombra da AppBar
       ),
       body: Container(
