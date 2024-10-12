@@ -1,9 +1,8 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:visionapp/ChatPage.dart';
 import 'package:visionapp/HomeScreen.dart';
-import 'package:visionapp/PatientDetail.dart';
 import 'package:visionapp/PatientListPage.dart';
 
 void main() {
@@ -59,9 +58,9 @@ class _MyHomePageState extends State<MyHomePage> {
   void initState() {
     super.initState();
     _pages.addAll([
-      HomeScreen(), // Instanciação do HomeScreen
+      const HomeScreen(), // Instanciação do HomeScreen
       const PatientListPage(), // Lista de pacientes
-      const ChatScreen(), // Tela de chat
+      const ChatListScreen(), // Tela de chat
       const SettingsScreen(), // Tela de configurações
     ]);
   }
@@ -131,17 +130,6 @@ class _MyHomePageState extends State<MyHomePage> {
         onTap: _onItemTapped,
       ),
     );
-  }
-}
-
-// Classe ChatScreen (a ser implementada)
-class ChatScreen extends StatelessWidget {
-  const ChatScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Center(
-        child: Text('Tela de Chat', style: TextStyle(color: Colors.white)));
   }
 }
 
@@ -227,7 +215,7 @@ class CustomCard2 extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       width: 120, // Largura do card
-      height: 150, // Altura do card
+      height: 130, // Altura do card
       child: Card(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(15), // Bordas arredondadas
