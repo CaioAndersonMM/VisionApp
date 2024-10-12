@@ -256,7 +256,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               padding: const EdgeInsets.all(8.0),
                               child: Container(
                                 decoration: BoxDecoration(
-                                  color: const Color.fromARGB(255, 4, 13, 139),
+                                  color: const Color.fromARGB(255, 15, 24, 75),
                                   borderRadius: BorderRadius.circular(20),
                                   boxShadow: [
                                     BoxShadow(
@@ -280,7 +280,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       ),
                                     ),
                                     Positioned(
-                                      top: 105,
+                                      top: 110,
                                       left: 0,
                                       right: 0,
                                       child: Container(
@@ -290,27 +290,37 @@ class _HomeScreenState extends State<HomeScreen> {
                                               CrossAxisAlignment.start,
                                           children: [
                                             Container(
+                                              width: double
+                                                  .infinity, // Ocupa toda a largura disponível
+
                                               decoration: BoxDecoration(
-                                                color: const Color.fromARGB(
-                                                    255, 4, 13, 139),
+                                                color: Color.fromARGB(
+                                                    197, 12, 25, 99),
                                                 borderRadius:
-                                                    BorderRadius.circular(30),
+                                                    BorderRadius.circular(10),
                                               ),
+
                                               padding:
                                                   const EdgeInsets.symmetric(
                                                       horizontal: 8.0,
                                                       vertical: 4.0),
+
                                               child: Row(
                                                 mainAxisAlignment: MainAxisAlignment
                                                     .spaceBetween, // Espaçar texto e ícone
                                                 children: [
-                                                  // Texto do nome e idade
+                                                  const Icon(
+                                                    Icons
+                                                        .perm_contact_calendar_sharp,
+                                                    color: Colors.white,
+                                                    size: 23,
+                                                  ),
                                                   Text(
                                                     '${user['name']}, ${user['age']} anos',
                                                     style: const TextStyle(
                                                       color: Color.fromARGB(
                                                           255, 255, 255, 255),
-                                                      fontSize: 18,
+                                                      fontSize: 17,
                                                       fontWeight:
                                                           FontWeight.bold,
                                                     ),
@@ -437,7 +447,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       scrollDirection: Axis.horizontal,
                       child: Row(
                         children: messages
-                            .map((message) => _buildBubble(message, context, ''))
+                            .map(
+                                (message) => _buildBubble(message, context, ''))
                             .toList(),
                       ),
                     ),
@@ -488,7 +499,7 @@ class _HomeScreenState extends State<HomeScreen> {
             right: 10, bottom: 10), // Margem inferior para espaçamento
         padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
         decoration: BoxDecoration(
-          color: const Color.fromARGB(255, 4, 13, 139),
+          color: Color.fromARGB(255, 31, 38, 99),
           borderRadius: BorderRadius.circular(20),
           boxShadow: [
             BoxShadow(
